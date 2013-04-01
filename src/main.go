@@ -7,10 +7,12 @@ package main
 import (
 	"net/http"
 	"fmt"
-	"balls"
+	"ballsite"
 	"log"
 	"html/template"
 	"code.google.com/p/gorilla/sessions"
+	"strings"
+	"strconv"
 )
 
 type Context struct {
@@ -49,7 +51,7 @@ func random(w http.ResponseWriter, r *http.Request, ctx *Context) (err error) {
 		"templates/ball.html",
 	))
 
-	var ball = balls.Random()
+	var ball = ballsite.RandomBall()
 	return page.Execute(w, ball)
 }
 
@@ -58,10 +60,15 @@ func ball(w http.ResponseWriter, r *http.Request, ctx *Context) (err error) {
 		"templates/_base.html",
 		"templates/ball.html",
 	))
-	var url = "http://localhost:8080" + r.RequestURI
+	id_a := strings.Split(r.RequestURI, "/")
+	id_s := id_a[len(id_a)-1]
+	id, err := strconv.Atoi(id_s)
+	if err != nil {
+		return err
+	}
 
-	fmt.Println("ball:", url)
-	var ball = balls.ByURL(url)
+	fmt.Println("ball id:", id)
+	var ball = ballsite.BallByID(id)
 	return page.Execute(w, ball)
 }
 
@@ -85,14 +92,20 @@ func index(w http.ResponseWriter, r *http.Request, ctx *Context) (err error) {
 //	s.AddFlash("Hurrenson!")
 //
 //	s.Save(r,w)
-	var b = balls.All()
+	var b = ballsite.AllBalls()
 	return index.Execute(w, b)
 }
 
 
 func image(w http.ResponseWriter, r *http.Request, ctx *Context) (err error) {
-	var url = r.RequestURI
-	path, err := balls.ImagePathByURL(url)
+	id_a := strings.Split(r.RequestURI, "/")
+	id_s := id_a[len(id_a)-1]
+	id, err := strconv.Atoi(id_s)
+	if err != nil {
+		return err
+	}
+
+	path, err := ballsite.ImagePathById(id)
 	if (err != nil) {
 		return err;
 	}
@@ -102,8 +115,13 @@ func image(w http.ResponseWriter, r *http.Request, ctx *Context) (err error) {
 }
 
 func thumb(w http.ResponseWriter, r *http.Request, ctx *Context) (err error) {
-	var url = r.RequestURI
-	path, err := balls.ThumbPathByURL(url)
+	id_a := strings.Split(r.RequestURI, "/")
+	id_s := id_a[len(id_a)-1]
+	id, err := strconv.Atoi(id_s)
+	if err != nil {
+		return err
+	}
+	path, err := ballsite.ThumbPathById(id)
 	if (err != nil) {
 		return err;
 	}
@@ -115,8 +133,34 @@ func thumb(w http.ResponseWriter, r *http.Request, ctx *Context) (err error) {
 func main() {
 	store = sessions.NewCookieStore([]byte("rape"))
 
-	var c = balls.Count()
+	var c = ballsite.BallCount()
 	fmt.Println("Ball count:", c)
+
+	/*
+	var ball = ballsite.Ball{}
+	ball.Title = "First Ball"
+	ball.Description = "Dies ist der erste Ball mit dem storm clouds and rainbow image"
+	ball.ImagePath = "/var/www/polandball/media/images/storm_clouds_and_rainbow-wallpaper-1920x1200.jpg"
+	ball.ThumbPath = "/var/www/polandball/media/thumbnails/storm_clouds_and_rainbow-wallpaper-1920x1200.jpg.png"
+
+	fmt.Println("before insert:", ball)
+	ball = ballsite.InsertBall(ball)
+	fmt.Println("after insert:", ball)
+
+
+	ball = ballsite.Ball{}
+	ball.Title = "Second Ball"
+	ball.Description = "Dies ist der zweite Ball mit dem hacker redux image"
+	ball.ImagePath = "/var/www/polandball/media/images/hacker_redux_by_hashbox.png"
+	ball.ThumbPath = "/var/www/polandball/media/thumbnails/hacker_redux_by_hashbox.png.png"
+
+	fmt.Println("before insert:", ball)
+	ball = ballsite.InsertBall(ball)
+	fmt.Println("after insert:", ball)
+
+	return
+	*/
+
 
 	http.Handle("/", makeHandler(index))
 	http.Handle("/ball/", makeHandler(ball))

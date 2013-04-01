@@ -3,7 +3,7 @@
 {{ define "content" }}
 <h1>{{ .Title }} @{{ .Date }}</h1>
     <div class="ball">
-        URL: <a href="{{.URL}}">{{.URL}}</a><br>
-        <A href="{{.ImageURL}}"><img src="{{.ThumbURL}}"></a>
+        URL: <a href="/ball/{{.Id}}">/ball/{{.Id}}</a><br>
+        <A href="/view/image/{{.ImageId}}"><img src="/view/thumbnail/{{.ImageId}}"></a>
     </div>
 {{ end }}
