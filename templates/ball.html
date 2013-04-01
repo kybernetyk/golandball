@@ -1,0 +1,9 @@
+{{ define "title" }}Ball: {{ .Id }} - {{ .Title }}{{ end }}
+
+{{ define "content" }}
+<h1>{{ .Title }} @{{ .Date }}</h1>
+    <div class="ball">
+        URL: <a href="{{.URL}}">{{.URL}}</a><br>
+        <A href="{{.ImageURL}}"><img src="{{.ThumbURL}}"></a>
+    </div>
+{{ end }}

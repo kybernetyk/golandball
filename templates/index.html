@@ -1,0 +1,14 @@
+{{ define "title" }}Guestbook{{ end }}
+
+{{ define "content" }}
+    <h1>Rapebook</h1>
+
+    <p>Hello, and welcome to my guestbook, because it's 1997!</p>
+
+    <ul class="guests">
+        {{ range . }}
+        <li>{{ .Title }} @{{ .Date }}<br>
+            <img src="{{.ThumbURL}}"></li>
+        {{ end }}
+    </ul>
+{{ end }}
