@@ -1,6 +1,8 @@
-to run:
-	go run src/main.go
+first time setup:
+	source ./activate_workspace.sh		;to set $GOPATH
+	cd src
+	go get
 
-if it won't compile because of missing packages
-	put this directory into
-		$GOPATH
+to run:
+	go run src/site/site.go 
+

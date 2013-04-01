@@ -30,6 +30,7 @@ type Ball struct {
 var _db *sql.DB
 
 func db() (*sql.DB) {
+	fmt.Println("LOL!!!!!!!!!!!!!!!!")
 	if (_db != nil) {
 		return _db
 	}
